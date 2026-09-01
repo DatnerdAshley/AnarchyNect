@@ -59,7 +59,7 @@ position: fixed;
 top: 0; left: 0;
 width: 100%; height: 100%;
 /* SVG stroke color references the dynamic --text-color variable */
-background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M0 50 Q50 0 100 50 T200 50 V200 H0 Z" fill="none" stroke="var(--text-color, rgb(...))"></path></svg>');
+background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M0 50 Q50 0 100 50 T200 50 V200 H0 Z" fill="none" stroke="rgba(248,249,250,0.8)"/>') ;
 background-size: 200px 200px;
 z-index: -1;
 /* Opacity is adjusted dynamically based on theme contrast */
@@ -170,7 +170,7 @@ section::before {
 content: "";
 position: absolute;
 top: 0; left: 0; right: 0; bottom: 0;
-background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M0 100 Q50 50 100 100 T200 100 V200 H0 Z" fill="none" stroke="var(--text-color, rgb(...))"></path></svg>');
+background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><path d="M0 100 Q50 50 100 100 T200 100 V200 H0 Z" fill="none" stroke="rgba(248,249,250,0.8)"/>');
 background-size: 200px 200px;
 opacity: 0.1;
 z-index: 0;
@@ -552,6 +552,27 @@ font-size: 14px;
 .faded {
   opacity: 0.6;
 }
+
+/* CHAT REDIRECT BUTTON STYLES */
+.chat-redirect-button {
+width: 100%;
+padding: 12px;
+margin-top: 10px;
+font-weight: bold;
+border: none;
+border-radius: 10px;
+background: linear-gradient(135deg, var(--accent-blue), #2a8dff);
+color: var(--primary-bg);
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+box-shadow: 0 4px 8px rgba(76, 201, 240, 0.4);
+font-size: 14px;
+}
+.chat-redirect-button:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 15px rgba(76, 201, 240, 0.6);
+background: linear-gradient(135deg, #2a8dff, #0099ff);
+}
 </style>
 <style>
 #navbar {
@@ -611,7 +632,7 @@ font-size: 14px;
 </div>
 <div class="flex items-center space-x-2">
 <img alt="Profile" id="header-profile-picture" src="https://api.dicebear.com/6.x/thumbs/svg?seed=Anonymous" style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer; object-fit: cover; border: 2px solid var(--accent-blue);"/>
-<a href="auth.html" id="header-signin-button" onmouseout="this.style.backgroundColor='var(--accent-blue)'; this.style.transform='none';" onmouseover="this.style.backgroundColor='var(--accent-green)'; this.style.transform='scale(1.05)';" style="padding: 10px 20px; background-color: var(--accent-blue); color: var(--primary-bg); border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: all 0.3s; text-decoration: none;">
+<a href="auth.html" id="header-signin-button" onmouseout="this.style.backgroundColor='var(--accent-blue)'; this.style.transform='none';" onmouseover="this.style.backgroundColor='var(--accent-green)'; this.style.transform='scale(1.05)';" style="padding: 10px 20px; background-color: var(--accent-blue); color: var(--primary-bg); border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: bold; transition: 0.3s ease;">
    SIGN IN
 </a>
 <button id="logout-btn" style="display: none; padding: 10px 20px; background-color: #e74c3c; color: white; border: none; cursor: pointer;">Logout</button>
@@ -633,6 +654,7 @@ font-size: 14px;
 <div class="section" id="info-section" style="color: var(--accent-yellow); font-weight: bold;">Loading current time and day type...</div>
 <div class="section" id="period-timer">Loading Period Timer...</div>
 <div class="section" id="current-lunch-display">Loading Lunch...</div>
+<button class="chat-redirect-button" onclick="window.location.href='chat.html';">💬 Go to Chat</button>
 <div class="info">
 <p data-food="Boneless Wings">M – Boneless Wings</p>
 <p data-food="Orange Chicken">T – Orange Chicken</p>
@@ -644,8 +666,8 @@ font-size: 14px;
 <div class="tab-content active" id="home">
 <section>
 <button class="close-tab-button">×</button>
-<h1>Welcome to Crooms Connect</h1>
-<p>Your student hub with resources, schedules, and tools.</p>
+<h1>Welcome to AnarchyNect</h1>
+<p>Your hub with resources, schedules, and tools.</p>
 <div id="welcome-message" style="background: var(--card-bg-subtle); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 15px; margin-top: 20px; font-weight: bold; color: var(--text-color);">
   <h3>Latest Announcement</h3>
   <p id="home-announcement-text">Loading announcement...</p>
@@ -666,12 +688,28 @@ font-size: 14px;
 <p>Connect with classmates and teachers.</p>
 <div class="card-grid">
 <div class="card" id="clubs-card"><span class="icon"> 👥 </span><h3>Clubs</h3><p>Find and join school clubs.</p></div>
-<div class="card"><span class="icon"> 💬 </span><h3>Forums</h3><p><a href="connect2.html">Discuss topics with peers.</a></p></div>
+<div class="card"><span class="icon"> 💬 </span><h3>Chat</h3><p><a href="chat.html">Discuss topics with peers.</a></p></div>
 </div>
 </section>
 </div>
 <footer>
-<p>&copy; 2025 Crooms Connect. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+<p>&copy; 2025 AnarchyNect. <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
 </footer>
+
+<script>
+// Time system - keeps existing functionality
+function updateTimeSystem() {
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, '0');
+  const day = now.toLocaleDateString('en-US', { weekday: 'long' });
+  
+  document.getElementById('info-section').textContent = `${day} - ${hours}:${minutes}`;
+}
+
+// Update time every minute
+updateTimeSystem();
+setInterval(updateTimeSystem, 60000);
+</script>
 </body>
 </html>
