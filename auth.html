@@ -2,7 +2,6 @@
 <html lang="en">
 <!-- Load Supabase client library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
-<head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>AnarchyNect - Login</title>
@@ -112,66 +111,81 @@
     </button>
 </div>
 <script>
-    // Supabase initialization
-    const supabaseUrl = 'https://ephlcktieezdkffsfbcb.supabase.co';
-    const supabaseKey = 'sb_publishable_kOho5q8RGe8BvYVtVwAxWg_pcZ7Oxl7';
+    
+  // Supabase initialization (UMD script is already loaded above)
+  const supabaseUrl = "https://ephlcktieezdkffsfbcb.supabase.co";
+  const supabaseKey = "sb_publishable_kOho5q8RGe8BvYVtVwAxWg_pcZ7Oxl7";
 
-    const supabaseClient =
-        window.supabase.createClient(supabaseUrl, supabaseKey);
+  const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Configuration
-    const PLACEHOLDER_DOMAIN = '@AnarchyNect.com';
+  // Configuration
+  const PLACEHOLDER_DOMAIN = "@AnarchyNect.com";
 
-    const signInForm = document.getElementById('sign-in-form');
-    const signUpForm = document.getElementById('sign-up-form');
-    const toggleAuthButton = document.getElementById('toggle-auth-view');
-    const authMessage = document.getElementById('auth-message');
+  const signInForm = document.getElementById("sign-in-form");
+  const signUpForm = document.getElementById("sign-up-form");
+  const toggleAuthButton = document.getElementById("toggle-auth-view");
+  const authMessage = document.getElementById("auth-message");
 
-    const showMessage = (msg) => {
-        authMessage.textContent = msg;
-        authMessage.classList.remove('hidden');
-    };
+  const showMessage = (msg) => {
+    authMessage.textContent = msg;
+    authMessage.classList.remove("hidden");
+  };
 
-    const toggleView = () => {
-        authMessage.classList.add('hidden');
-        signInForm.classList.toggle('hidden');
-        signUpForm.classList.toggle('hidden');
-        toggleAuthButton.textContent =
-            signInForm.classList.contains('hidden')
-                ? 'Already have an account? Sign In'
-                : 'Need an account? Sign Up';
-    };
+  const toggleView = () => {
+    authMessage.classList.add("hidden");
+    signInForm.classList.toggle("hidden");
+    signUpForm.classList.toggle("hidden");
+    toggleAuthButton.textContent = signInForm.classList.contains("hidden")
+      ? "Already have an account? Sign In"
+      : "Need an account? Sign Up";
+  };
 
-    signInForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+  signInForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-        const username = document.getElementById('signin-username').value.trim();
-        const password = document.getElementById('signin-password').value;
-        const email = username + PLACEHOLDER_DOMAIN;
+    const username = document.getElementById("signin-username").value.trim();
+    const password = document.getElementById("signin-password").value;
+    const email = username + PLACEHOLDER_DOMAIN;
 
-        const { error } =
-            await supabaseClient.auth.signInWithPassword({ email, password });
+    showMessage(""); // clear
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-        if (error) showMessage('Invalid username or password');
-        else window.location.href = 'connect.html';
+    if (error) {
+      showMessage(error.message || "Invalid username or password");
+    } else {
+      window.location.href = "connect.html";
+    }
+  });
+
+  signUpForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById("signup-username").value.trim();
+    const password = document.getElementById("signup-password").value;
+    const email = username + PLACEHOLDER_DOMAIN;
+
+    const { error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { username } // optional, but useful if you use it later
+      }
     });
 
-    signUpForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    if (error) {
+      showMessage(error.message);
+    } else {
+      toggleView();
+      showMessage("Account created. Please sign in.");
+    }
+  });
 
-        const username = document.getElementById('signup-username').value.trim();
-        const password = document.getElementById('signup-password').value;
-        const email = username + PLACEHOLDER_DOMAIN;
+  toggleAuthButton.addEventListener("click", toggleView);
 
-        const { error } =
-            await supabaseClient.auth.signUp({ email, password });
-
-        if (error) showMessage(error.message);
-        else {
-            toggleView();
-            showMessage('Account created. Please sign in.');
-        }
-    });
-
-    toggleAuthButton.addEventListener('click', toggleView);
+  // If already logged in, skip login page
+  (async () => {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data?.session) window.location.href = "connect.html";
+  })();
 </script>
+
