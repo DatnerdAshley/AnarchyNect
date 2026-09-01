@@ -179,8 +179,7 @@
     } else {
       // Save credentials to browser storage
       localStorage.setItem("anarchynect_username", username);
-      // never store plaintext passwords
-      localStorage.removeItem("anarchynect_password");
+      
 
       // Automatically sign in the user after account creation
       const { error: signInError } = await supabaseClient.auth.signInWithPassword({ 
