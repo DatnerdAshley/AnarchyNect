@@ -175,8 +175,23 @@
     if (error) {
       showMessage(error.message);
     } else {
-      toggleView();
-      showMessage("Account created. Please sign in.");
+      // Save credentials to browser storage
+      localStorage.setItem("anarchynect_username", username);
+      localStorage.setItem("anarchynect_password", password);
+      
+      // Automatically sign in the user after account creation
+      const { error: signInError } = await supabaseClient.auth.signInWithPassword({ 
+        email, 
+        password 
+      });
+
+      if (signInError) {
+        showMessage("Account created! Please sign in with your new credentials.");
+        toggleView();
+      } else {
+        // Redirect to connect.html immediately after successful sign up and sign in
+        window.location.href = "connect.html";
+      }
     }
   });
 
